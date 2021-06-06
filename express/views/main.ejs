@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Tugas 10 App CRUD</a>
+        </div>
+    </nav>
+    <div class="notif"></div>
+    <div class="container">
+        <div>
+            <button class="btn btn-success my-4" data-bs-toggle="modal" data-bs-target="#modalTambah">Add
+                Produk</button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nama Produk</th>
+                    <th scope="col">Keterangan</th>
+                    <th scope="col">Harga</th>
+                    <th scope="col">Jumlah</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let i=1; results.forEach((ress)=>{%>
+                    <tr>
+                        <th scope="row"><%=i%></th>
+                        <td><%= ress.nama_produk %></td>
+                        <td><%= ress.keterangan %></td>
+                        <td>Rp.<%= ress.harga %></td>
+                        <td><%= ress.jumlah %></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary btn-edit" data-id="<%= ress.id %>" data-bs-toggle="modal" data-bs-target="#modalUbah">ubah</button>
+                            <a class="btn btn-sm btn-danger" href="/hapus/<%= ress.id %>" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?');">hapus</a>
+                        </td>
+                    </tr>
+                <% i++;}) %>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <!-- Modal tambah-->
+    <div class="modal fade" id="modalTambah" tabindex="-1" aria-labelledby="modalTambahLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal tambah produk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/tambah" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="nama"
+                                placeholder="Nama produk">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="keterangan"
+                                placeholder="Keterangan produk">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="harga"
+                                placeholder="Harga produk">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="jumlah"
+                                placeholder="Jumlah produk">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal ubah-->
+    <div class="modal fade" id="modalUbah" tabindex="-1" aria-labelledby="modalUbahLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal ubah produk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/ubah" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control id" name="id" id="id"
+                                placeholder="id produk" hidden>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control nama" name="nama" id="nama"
+                                placeholder="Nama produk">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control keterangan" name="keterangan" id="keterangan"
+                                placeholder="Keterangan produk">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control harga" name="harga" id="harga"
+                                placeholder="Harga produk">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control jumlah" name="jumlah" id="jumlah"
+                                placeholder="Jumlah produk">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Ubah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.js"></script>
+    <script>
+        $('.btn-edit').click(function(){
+            let id = $(this).data('id');
+            $.ajax({
+                url:'/produk/'+id,
+                success: (results)=>{
+                    let data = JSON.parse(results)[0];
+                    $('.id').val(data.id);
+                    $('.nama').val(data.nama_produk);
+                    $('.keterangan').val(data.keterangan);
+                    $('.harga').val(data.harga);
+                    $('.jumlah').val(data.jumlah);
+                    //console.log(data)
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
